@@ -85,7 +85,7 @@ Subtotal: ₹$subtotal
         $mail->SMTPDebug = 0;
 
         $mail->Username = 'hoddurshardha@gmail.com';
-        $mail->Password = 'vwwlixmwerrsiegg'; // Gmail App Password
+        $mail->Password = 'your_password'; // Gmail App Password
 
         $mail->SMTPSecure = 'tls';
         $mail->Port = 587;
