@@ -1,0 +1,279 @@
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Your Cart</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f7f7f7;
+        }
+        h1 {
+            text-align: center;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+        th {
+            background: #333;
+            color: white;
+        }
+        .total {
+            margin-top: 20px;
+            font-size: 20px;
+            text-align: right;
+            font-weight: bold;
+        }
+        .btn {
+            display: block;
+            margin: 20px auto;
+            padding: 12px 25px;
+            font-size: 18px;
+            background: #333;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background: #555;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Your Cart</h1>
+
+<table id="cartTable">
+    <tr>
+        <th>Product</th>
+        <th>Price</th>
+    </tr>
+</table>
+
+<div class="total" id="total"></div>
+
+<form action="place_order.php" method="POST">
+    <button type="submit" class="btn">Order Now</button>
+</form>
+
+<script>
+let cart = JSON.parse(localStorage.getItem("cart")) || [];
+let table = document.getElementById("cartTable");
+let total = 0;
+
+if (cart.length === 0) {
+    let row = table.insertRow();
+    let cell = row.insertCell(0);
+    cell.colSpan = 2;
+    cell.innerText = "Your cart is empty";
+    cell.style.textAlign = "center";
+} else {
+    cart.forEach(item => {
+        let row = table.insertRow();
+        row.insertCell(0).innerText = item.name;
+        row.insertCell(1).innerText = "₹" + item.price.toLocaleString();
+        total += item.price;
+    });
+}
+
+document.getElementById("total").innerText = "Total: ₹" + total.toLocaleString();
+</script>
+
+</body>
+</html>
+ -->
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Your Cart</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f3f3f3;
+            padding: 20px;
+        }
+        h1 {
+            color: #388b6f;
+            text-align: center;
+        }
+        .cart-container {
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 10px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background: #388b6f;
+            color: white;
+        }
+        .btn {
+            padding: 6px 12px;
+            background: #388b6f;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .btn-danger {
+            background: #cc0000;
+        }
+        .total {
+            text-align: right;
+            font-size: 20px;
+            margin-top: 20px;
+            color: #388b6f;
+            font-weight: bold;
+        }
+        .order-btn {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            font-size: 16px;
+            background: #388b6f;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Your Cart</h1>
+
+<div class="cart-container">
+    <table id="cartTable">
+        <tr>
+            <th>Product</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Remove</th>
+        </tr>
+    </table>
+
+    <div class="total" id="total"></div>
+
+    <button class="order-btn" onclick="goToCheckout()">Order Now</button>
+</div>
+
+<script>
+let cart = JSON.parse(localStorage.getItem("cart")) || [];
+let table = document.getElementById("cartTable");
+let total = 0;
+
+// Ensure every item has quantity
+cart = cart.map(item => ({
+    ...item,
+    qty: item.qty ? parseInt(item.qty) : 1
+}));
+
+localStorage.setItem("cart", JSON.stringify(cart));
+
+function renderCart() {
+
+    table.innerHTML = `
+        <tr>
+            <th>Product</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Remove</th>
+        </tr>
+    `;
+
+    total = 0;
+
+    if (cart.length === 0) {
+        document.getElementById("total").innerText = "Your cart is empty";
+        return;
+    }
+
+    cart.forEach((item, index) => {
+
+        let row = table.insertRow();
+
+        row.insertCell(0).innerText = item.name;
+
+        // Correct price calculation with Indian format
+        let itemTotal = item.price * item.qty;
+        row.insertCell(1).innerText = "\u20B9" + itemTotal.toLocaleString("en-IN");
+
+        let qtyCell = row.insertCell(2);
+        qtyCell.innerHTML = `
+            <input type="number" 
+                   min="1" 
+                   value="${item.qty}" 
+                   onchange="updateQty(${index}, this.value)">
+        `;
+
+        let removeCell = row.insertCell(3);
+        removeCell.innerHTML = `
+            <button class="btn btn-danger" 
+                    onclick="removeItem(${index})">
+                Remove
+            </button>
+        `;
+
+        total += itemTotal;
+    });
+
+    // Total in Indian format
+    document.getElementById("total").innerText =
+        "Total: \u20B9" + total.toLocaleString("en-IN");
+}
+
+function updateQty(index, value) {
+    cart[index].qty = parseInt(value);
+    localStorage.setItem("cart", JSON.stringify(cart));
+    renderCart();
+}
+
+function removeItem(index) {
+    cart.splice(index, 1);
+    localStorage.setItem("cart", JSON.stringify(cart));
+    renderCart();
+}
+
+function goToCheckout() {
+    if (cart.length === 0) {
+        alert("Your cart is empty!");
+        return;
+    }
+    window.location.href = "checkout.html";
+}
+
+renderCart();
+</script>
+
+</body>
+</html>
+

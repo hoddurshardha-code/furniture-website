@@ -1,0 +1,127 @@
+
+<!-- <!DOCTYPE html>
+<html>
+<head>
+    <title>Checkout</title>
+    <style>
+        body { font-family: Arial; background:#f7f7f7; padding:20px; }
+        form { max-width:400px; margin:auto; background:#fff; padding:20px; border-radius:5px; }
+        input, textarea, button { width:100%; padding:10px; margin:10px 0; }
+        button { background:#388b6f; color:white; border:none; cursor:pointer; }
+    </style>
+</head>
+<body>
+
+<h2 style="text-align:center;">Place Your Order</h2>
+
+<form action="place_order.php" method="POST">
+    <input type="text" name="name" placeholder="Your Name" required>
+    <input type="email" name="email" placeholder="Your Email" required>
+    <input type="text" name="mobile" placeholder="Mobile Number" required>
+    <textarea name="address" placeholder="Your Address" required></textarea>
+<input type="hidden" name="cartData" id="cartData">
+    <button type="submit">Place Order</button>
+</form>
+
+
+<script>
+document.querySelector("form").addEventListener("submit", function () {
+
+    let cart = localStorage.getItem("cart");
+    document.getElementById("cartData").value = cart;
+
+});
+</script>
+
+</body>
+</html> -->
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Checkout</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            background:#f7f7f7;
+            padding:25px;
+        }
+
+        form {
+            max-width:450px;
+            margin:auto;
+            background:#fff;
+            padding:18px;
+            border-radius:5px;
+        }
+
+        input, textarea, button {
+            width:90%;
+            padding:12px;
+            margin:12px 10px;
+        }
+
+        button {
+            background:#388b6f;
+            color:white;
+            border:none;
+            cursor:pointer;
+            margin:0px 22px;
+            border-radius: 5px;
+        }
+
+        button:hover{
+    background:#2f6f59;
+}
+    </style>
+</head>
+
+<body>
+
+<h2 style="text-align:center;">Place Your Order</h2>
+
+<form id="orderForm" action="place_order.php" method="POST">
+
+    <input type="text" name="customer_name" placeholder="Your Name" required>
+
+    <input type="email" name="email" placeholder="Your Email" required>
+
+    <input type="text" name="mobile" placeholder="Mobile Number" required>
+
+    <textarea name="address" placeholder="Your Address" required></textarea>
+
+    <!-- ⭐ IMPORTANT HIDDEN FIELD -->
+    <input type="hidden" name="cartData" id="cartData">
+
+    <button type="submit">Place Order</button>
+
+</form>
+
+<script>
+
+const form = document.getElementById("orderForm");
+
+form.addEventListener("submit", function(e){
+
+    let cart = localStorage.getItem("cart");
+
+    // DEBUG CHECK
+    console.log("Cart Data:", cart);
+
+    if(!cart || cart === "[]" || cart === null){
+        alert("Your cart is empty!");
+        e.preventDefault();
+        return;
+    }
+
+    // SET hidden field value
+    document.getElementById("cartData").value = cart;
+
+});
+</script>
+
+</body>
+</html>
